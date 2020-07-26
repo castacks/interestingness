@@ -2,19 +2,20 @@
 
 * Refer to the [project description](https://theairlab.org/interestingness) for more details.
 
-* This repo contains the source codes for the following paper, which is selected for **oral presentation** (2%) at ECCV 2020.
+* This code is for the following [paper](https://arxiv.org/pdf/2005.08829.pdf), which is selected for **oral presentation** (2%) at ECCV 2020.
 
-     [Chen Wang](https://chenwang.site), [Wenshan Wang](http://www.wangwenshan.com/), [Yuheng Qiu](https://theairlab.org/team/yuheng/), [Yafei Hu](https://theairlab.org/team/yafeih/), and [Sebatian Scherer](https://www.ri.cmu.edu/ri-faculty/sebastian-scherer), [Visual Memorability for Robotic Interestingness via Unsupervised Online Learning](https://arxiv.org/pdf/2005.08829.pdf), European Conference on Computer Vision (ECCV), 2020.
+     [Chen Wang](https://chenwang.site), [Wenshan Wang](http://www.wangwenshan.com/), [Yuheng Qiu](https://theairlab.org/team/yuheng/), [Yafei Hu](https://theairlab.org/team/yafeih/), and [Sebastian Scherer](https://www.ri.cmu.edu/ri-faculty/sebastian-scherer), [Visual Memorability for Robotic Interestingness via Unsupervised Online Learning](https://arxiv.org/pdf/2005.08829.pdf), European Conference on Computer Vision (ECCV), 2020.
 
 * We also provide ROS wrapper for this project, you may go to [interestingness_ros](https://github.com/wang-chen/interestingness_ros).
 
+* You can find the [slides on OneDrive](https://entuedu-my.sharepoint.com/:f:/g/personal/cwang017_e_ntu_edu_sg/Eh37rAUCP8tLkEuSuv64hi4Bq52QHRgpMLjT1Ar2jHhbiA?e=yKYb5b).
+
+* You can find the [SubT](http://theairlab.org/dataset/interestingness) dataset and the [evaluation tools](https://github.com/wang-chen/SubT.git).
+
 ---
-## Dependencies
-   Matplotlib, PyTorch, TorchVision, OpenCV
-   
-      conda install -c conda-forge matplotlib
-      conda install pytorch torchvision cudatoolkit=10.2 -c pytorch
-      conda install -c conda-forge opencv
+## Install Dependencies
+
+      pip3 install -r requirements.txt
 
 ---
 ## Long-term Learning
@@ -22,7 +23,11 @@
 * You may skip this step, if you download the pre-trained [at.pt](https://github.com/wang-chen/interestingness/releases/download/v1.0/ae.pt) into folder "saves".
 
 
-* Download [coco](http://cocodataset.org) dataset into folder "data-root", so that it looks like:
+* Download [coco](http://cocodataset.org) dataset into folder [data-root]:
+
+      bash download_coco.sh [data-root] # replace [data-root] by your desired location
+      
+     The dataset will be look like:
 
       data-root
       ├──coco
@@ -33,11 +38,6 @@
              ├── test2017
              ├── train2017
              └── val2017
-
-
-* Install coco dataset tools (required by PyTorch).
-
-      conda install -c conda-forge pycocotools
 
 * Run
 
@@ -118,4 +118,4 @@
 ---
 You may watch the following video to catch the idea of this work.
 
-[<img src="https://img.youtube.com/vi/gBBdYdUrIcw/maxresdefault.jpg" width="100%">](https://youtu.be/gBBdYdUrIcw)
+[<img src="https://img.youtube.com/vi/PXIcm17fEko/maxresdefault.jpg" width="100%">](https://youtu.be/PXIcm17fEko)

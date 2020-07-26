@@ -87,7 +87,6 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Train AutoEncoder')
     parser.add_argument("--net", type=str, default='AE', help="AE or VAE")
     parser.add_argument("--data-root", type=str, default='/data/datasets', help="dataset root folder")
-    parser.add_argument("--annFile", type=str, default='/data/datasets', help="learning rate")
     parser.add_argument('--crop-size', nargs='+', type=int, default=[384,384], help='image crop size')
     parser.add_argument("--model-save", type=str, default='saves/ae.pt', help="model save point")
     parser.add_argument('--resume', dest='resume', action='store_true')
@@ -100,6 +99,7 @@ if __name__ == "__main__":
     parser.add_argument("--momentum", type=float, default=0, help="momentum of the optimizer")
     parser.add_argument("--alpha", type=float, default=0.1, help="weight of TVLoss")
     parser.add_argument("--w-decay", type=float, default=1e-5, help="weight decay of the optimizer")
+    parser.add_argument("--num-workers", type=int, default=4, help="number of workers for dataloader")
     parser.add_argument('--seed', type=int, default=0, help='Random seed.')
     parser.set_defaults(self_loop=False)
     args = parser.parse_args(); print(args)
@@ -123,15 +123,15 @@ if __name__ == "__main__":
     val_root = os.path.join(args.data_root, 'coco/images/val2017')
     test_root = os.path.join(args.data_root, 'coco/images/test2017')
 
-    train_annFile = os.path.join(args.annFile, 'coco/annotations/annotations_trainval2017/captions_train2017.json')
-    val_annFile = os.path.join(args.annFile, 'coco/annotations/annotations_trainval2017/captions_val2017.json')
-    test_annFile = os.path.join(args.annFile, 'coco/annotations/image_info_test2017/image_info_test2017.json')
+    train_annFile = os.path.join(args.data_root, 'coco/annotations/annotations_trainval2017/captions_train2017.json')
+    val_annFile = os.path.join(args.data_root, 'coco/annotations/annotations_trainval2017/captions_val2017.json')
+    test_annFile = os.path.join(args.data_root, 'coco/annotations/image_info_test2017/image_info_test2017.json')
 
     train_data = CocoDetection(root=train_root, annFile=train_annFile, transform=train_transform)
-    train_loader = Data.DataLoader(dataset=train_data, batch_size=args.batch_size, shuffle=True)
+    train_loader = Data.DataLoader(dataset=train_data, batch_size=args.batch_size, shuffle=True, pin_memory=True, num_workers=args.num_workers)
 
     val_data = CocoDetection(root=val_root, annFile=val_annFile, transform=val_transform)
-    val_loader = Data.DataLoader(dataset=val_data, batch_size=args.batch_size, shuffle=False)
+    val_loader = Data.DataLoader(dataset=val_data, batch_size=args.batch_size, shuffle=False, pin_memory=True, num_workers=args.num_workers)
 
     if args.resume == True:
         net, best_loss = torch.load(args.model_save)
@@ -170,6 +170,6 @@ if __name__ == "__main__":
         net = nn.DataParallel(net.cuda(), device_ids=list(range(torch.cuda.device_count())))
 
     test_data = CocoDetection(root=test_root, annFile=test_annFile, transform=val_transform)
-    test_loader = Data.DataLoader(dataset=test_data, batch_size=args.batch_size, shuffle=False)
+    test_loader = Data.DataLoader(dataset=test_data, batch_size=args.batch_size, shuffle=False, pin_memory=True, num_workers=args.num_workers)
     test_loss = performance(test_loader, net)
     print('val_loss: %.2f, test_loss, %.4f'%(best_loss, test_loss))
